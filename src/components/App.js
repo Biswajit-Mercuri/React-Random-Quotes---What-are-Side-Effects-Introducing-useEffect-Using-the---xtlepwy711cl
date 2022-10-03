@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "../styles/App.css";
 
 var colors = [
@@ -17,11 +17,41 @@ var colors = [
 ];
 
 const App = () => {
+  const [text, setText] = useState("");
+  const [author, setAuthor] = useState("");
+
+  useEffect(()=>{
+    fetch("https://api.quotable.io/random")
+    .then((res) => res.json())
+    .then((data)=>{
+      setText(data.content);
+      setAuthor(data.author);
+    })
+  },[])
+
+
+  const fetchQ = () => {
+    fetch("https://api.quotable.io/random")
+    .then((res) => res.json())
+    .then((data)=>{
+      setText(data.content);
+      setAuthor(data.author);
+      document.getElementsByTagName("body")[0].style.background = colors[parseInt(Math.random() * 10)];
+    });
+  }
 
     return (
       <div id="main">
         <div id="wrapper">
-          
+          <div id="quote-box">
+            <div className="quote-text">{text}</div>
+            <div className="quote-author">{author}</div>
+            <div className="buttons">
+              <button className="button" id="new-quote" onClick={fetchQ}>
+                Click
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
